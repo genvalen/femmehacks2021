@@ -1,0 +1,24 @@
+{
+    "actions": [
+        {
+            "collect": {
+                "name": "org_to_donate",
+                "questions": [
+                    {
+                "question": "Hi there! Which of the following category would you like to donate to: 'Environment', 'Arts, Culture, Humanities', 'Religion', 'Human Services', 'Education', 'Animals', 'International', 'Health', 'Community Development', 'Human and Civil Rights', 'Research and Public Policy'?",
+                        "name": "category",
+                        "type": "category"
+            },
+            {
+                "question": "Would you like to donate to a 'small', 'mid' or 'big' organization?",
+                        "name": "size",
+                        "type": "size"
+            }
+            ],
+            "on_complete": {
+                "redirect": "http://4e53bda452e1.ngrok.io/collect"
+                }
+            }
+        }
+    ]
+}
