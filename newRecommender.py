@@ -21,20 +21,6 @@ def bot():
     responded = False
     posCat = ['Environment', 'Arts, Culture, Humanities', 'Religion','Human Services', 'Education', 'Animals', 'International','Health', 'Community Development', 'Human and Civil Rights','Research and Public Policy']
     posSize = ['small', 'mid', 'big']
-#     if 'quote' in incoming_msg:
-#         # return a quote
-#         r = requests.get('https://api.quotable.io/random')
-#         if r.status_code == 200:
-#             data = r.json()
-#             quote = f'{data["content"]} ({data["author"]})'
-#         else:
-#             quote = 'I could not retrieve a quote at this time, sorry.'
-#         msg.body(quote)
-#         responded = True
-#     if 'cat' in incoming_msg:
-#         # return a cat pic
-#         msg.media('https://cataas.com/cat')
-#         responded = True
     print(incoming_msg)
     if (incoming_msg.lower() in posCat):
         category = incoming_msg
@@ -43,35 +29,10 @@ def bot():
         size = incoming_msg.lower()
         print(size)
         msg.body(get_org_recs(category, size))
-    if responded == False:
+        responded = True
+    if not responded:
         msg.body("Hi there! Which category do you want to donate to:'Environment', 'Arts, Culture, Humanities', 'Religion','Human Services', 'Education', 'Animals', 'International','Health', 'Community Development', 'Human and Civil Rights','Research and Public Policy'?")
     return str(resp)
-
-# @app.route('/collect',  methods=['POST'])
-# def collect():
-#     memory = json.loads(request.form.get('Memory'))
-
-#     answers = memory['twilio']['collected_data']['org_to_donate']['answers']
-
-#     category = answers['category']['answer']
-#     size = answers['size']['answer']
-
-#     options = get_org_recs(category, size)
-    
-#     recs = options.get('title_rec', None)
-    
-#     message = (
-#         f'Ok, you want to donate to a {size} sized organization in {category}.'
-#         f' Here are some options: {recs}.'
-#     )
-
-#     return {
-#         'actions': [
-#             {'say': message},
-#             {'listen': True},
-#             {"remember" : options }
-#         ]
-#     } 
 
 def get_org_recs(category, size):
     # memory = json.loads(request.form.get('Memory'))
@@ -87,23 +48,6 @@ def get_org_recs(category, size):
     recomended_orgs = a + b + c
     return recomended_orgs
 
-
-# @app.route("/sms", methods=['GET', 'POST'])
-# def incoming_sms():
-#     """Send a dynamic reply to an incoming text message"""
-#     # Get the message the user sent our Twilio number
-#     body = request.values.get('Body', None)
-
-#     # Start our TwiML response
-#     resp = MessagingResponse()
-
-#     # Determine the right reply for this message
-#     if body == 'boo':
-#         resp.message("Hi! which category do you want to donate to?")
-#     elif body == 'bye':
-#         resp.message("Goodbye")
-# #     resp.message("Hi! which category do you want to donate to?")
-#     return str(resp)
 
 if __name__ == "__main__":
     app.run(debug=True)
