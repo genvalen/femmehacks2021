@@ -34,12 +34,13 @@ def bot():
         msg.body("Hi there! Which category do you want to donate to:'Environment', 'Arts, Culture, Humanities', 'Religion','Human Services', 'Education', 'Animals', 'International','Health', 'Community Development', 'Human and Civil Rights','Research and Public Policy'?")
     return str(resp)
 
+charities_df = pd.read_csv(filename, header=0, sep=',',index_col=False, encoding='utf8',lineterminator='\n')
+
 def get_org_recs(category, size):
     # memory = json.loads(request.form.get('Memory'))
     filename = 'CLEAN_charity_data.csv'
-    df = pd.read_csv(filename, header=0, sep=',',index_col=False, encoding='utf8',lineterminator='\n')
-    
-    df_cat = df.loc[df['category'] == category]
+
+    df_cat = charities_df.loc[df['category'] == category]
     df_size = df_cat.loc[df['size'] == size]
     df_sorted = df_size.sort_values('score', ascending=False)
     a = df_sorted.iloc[0]['name'] + ", "
