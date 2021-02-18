@@ -1,4 +1,4 @@
-cellphone = ""
-twilio_number = ""
-twilio_account = ""
-twilio_token = ""
+CELLPHONE = ""
+TWILIO_NUMBER = ""
+TWILIO_ACCOUNT = ""
+TWILIO_TOKEN = ""
