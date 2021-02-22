@@ -1,18 +1,19 @@
 from twilio import twiml
-from twilio.rest import Client
+# from twilio.rest import Client
 from flask import Flask, request, redirect, send_file
 import requests
 from twilio.twiml.messaging_response import MessagingResponse
+from twilio_credentials_private import CELLPHONE, TWILIO_NUMBER, TWILIO_ACCOUNT, TWILIO_TOKEN
 
 import pickle
 import json
 import numpy as np
 import pandas as pd
-import re
+import re 
 
 app = Flask(__name__)
 
-@app.route('/sms', methods=['POST'])
+@app.route('/bot', methods=['POST'])
 def bot():
     incoming_msg = request.values.get('Body', '')
     resp = MessagingResponse()
@@ -49,6 +50,20 @@ def get_org_recs(category, size):
     return recomended_orgs
 
 
+def start_ngrok():
+    from twilio.rest import Client
+    from pyngrok import ngrok
+
+    account = TWILIO_ACCOUNT
+    token = TWILIO_TOKEN
+    url = ngrok.connect(5000).public_url
+    print(' * Tunnel URL:', url)
+    client = Client(account, token)
+    client.incoming_phone_numbers.list(
+        CELLPHONE)[0].update(
+            sms_url=url + '/bot')
+
+
 if __name__ == "__main__":
     # make csv into dataframe, pickle dataframe, then unpickle
     # this section will be updated when integrated with gcp storage
@@ -58,5 +73,5 @@ if __name__ == "__main__":
     charities_df.to_pickle(pickled_file)
     df = pd.read_pickle(pickled_file)
 
-
+    start_ngrok()
     app.run(debug=True)
