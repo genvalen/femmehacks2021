@@ -5,6 +5,7 @@ import requests
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio_credentials_private import CELLPHONE, TWILIO_NUMBER, TWILIO_ACCOUNT, TWILIO_TOKEN
 
+
 import pickle
 import json
 import numpy as np
@@ -37,6 +38,29 @@ def bot():
     return str(resp)
 
 
+def download_blob_from_gcp():
+    """Downloads a blob from the gcp bucket and \
+        returns destination file name."""
+
+    from google.cloud import storage
+
+    bucket_name = "charity-chatbot-data"
+    source_blob_name = "charities_df.pickle"
+    destination_file_name = "charities_df.pickle"
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    # Construct a client side representation of a blob.
+    # Note `Bucket.blob` differs from `Bucket.get_blob` as it doesn't retrieve
+    # any content from Google Cloud Storage. As we don't need additional data,
+    # using `Bucket.blob` is preferred here.
+    blob = bucket.blob(source_blob_name)
+    blob.download_to_filename(destination_file_name)
+
+    return destination_file_name
+
+
 def get_org_recs(category, size):
     # memory = json.loads(request.form.get('Memory'))
     
@@ -65,13 +89,10 @@ def start_ngrok():
 
 
 if __name__ == "__main__":
-    # make csv into dataframe, pickle dataframe, then unpickle
-    # this section will be updated when integrated with gcp storage
-    input_file = 'CLEAN_charity_data.csv'
-    pickled_file = 'charities_df.pickle'
-    charities_df = pd.read_csv(input_file, header=0, sep=',',index_col=False, encoding='utf8',lineterminator='\n')
-    charities_df.to_pickle(pickled_file)
+    pickled_file = download_blob_from_gcp()
     df = pd.read_pickle(pickled_file)
+
+    # print(get_org_recs("Environment", "big"))
 
     start_ngrok()
     app.run(debug=True)
